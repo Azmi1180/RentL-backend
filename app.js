@@ -1,13 +1,20 @@
 const express = require('express');
+const dotenv = require('dotenv');
+const sequelize = require('./config/database');
+const authRoutes = require('./routes/authRoutes');
+
+dotenv.config();
+
 const app = express();
-const port = 3000;
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
+app.use(express.json());
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
-});
+app.use('/api/auth', authRoutes);
 
-app
+const PORT = process.env.PORT || 5000;
+
+sequelize.sync()
+    .then(() => {
+        app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    })
+    .catch(err => console.log('Error: ' + err));
