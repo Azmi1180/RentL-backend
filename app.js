@@ -1,13 +1,16 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const sequelize = require('./config/database');
-const authRoutes = require('./routes/authRoutes');
+const authRoutes = require('./routes/auth.route');
+const lapanganRoutes = require ('./routes/lapangan.route');
 
 dotenv.config();
 
 const app = express();
 
 app.use(express.json());
+
+app.use('/api/lapangans', lapanganRoutes);
 
 app.use('/api/auth', authRoutes);
 

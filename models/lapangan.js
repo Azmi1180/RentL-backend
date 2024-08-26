@@ -1,28 +1,47 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Lapangan extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      // define association here
+      // Define associations here if needed
     }
   }
-  Lapangan.init({
-    name: DataTypes.STRING,
-    location: DataTypes.STRING,
-    type: DataTypes.STRING,
-    price_per_hour: DataTypes.FLOAT,
-    description: DataTypes.TEXT,
-    created_at: DataTypes.DATE
-  }, {
-    sequelize,
-    modelName: 'Lapangan',
-  });
+
+  Lapangan.init(
+    {
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      location: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      type: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      price_per_hour: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+      },
+      description: {
+        type: DataTypes.TEXT,
+      },
+      created_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
+    },
+    {
+      sequelize,
+      modelName: 'Lapangan',
+      tableName: 'Lapangans',
+      timestamps: false,
+    }
+  );
+
   return Lapangan;
 };
