@@ -1,24 +1,50 @@
-const { DataTypes } = require('sequelize');
+'use strict';
+const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const User = sequelize.define('User', {
-    username: {
+class User extends Model {
+    static associate(models) {
+    // Define associations here if needed
+    }
+}
+
+User.init({
+    full_name: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true
     },
     email: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
         validate: {
-            isEmail: true
-        }
+            isEmail: true,
+        },
     },
     password: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+    },
+    role: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    phone_number: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    created_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+    },
+},
+    {
+        sequelize,
+        modelName: 'User',
+        tableName: 'Users',
+        timestamps: false,
     }
-});
+);
 
 module.exports = User;
