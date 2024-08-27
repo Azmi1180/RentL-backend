@@ -1,20 +1,20 @@
-    const lapanganService = require('../services/lapangan.service');
-    const { validateAddLapangan, validateEditLapangan } = require('../validations/lapangan.validation');
+const lapanganService = require('../services/lapangan.service');
+const { validateAddLapangan, validateEditLapangan } = require('../validations/lapangan.validation');
 
     // GET all Lapangans
-    exports.getAllLapangans = async (req, res) => {
+exports.getAllLapangans = async (req, res) => {
     const result = await lapanganService.getAllLapangans(req, res);
     return res.status(result.status).json(result);
     };
 
     // GET a single Lapangan by ID
-    exports.getDetailLapangan = async (req, res) => {
+exports.getDetailLapangan = async (req, res) => {
     const result = await lapanganService.getDetailLapangan(req, res);
     return res.status(result.status).json(result);
     };
 
     // CREATE a new Lapangan
-    exports.createLapangan = async (req, res) => {
+exports.createLapangan = async (req, res) => {
     const { error } = validateAddLapangan(req.body);
 
     if (error) {
@@ -28,7 +28,7 @@
     };
 
     // UPDATE a Lapangan by ID
-    exports.editLapangan = async (req, res) => {
+exports.editLapangan = async (req, res) => {
     const { error } = validateEditLapangan(req.body);
 
     if (error) {
@@ -42,7 +42,7 @@
     };
 
     // DELETE a Lapangan by ID
-    exports.deleteLapangan = async (req, res) => {
+exports.deleteLapangan = async (req, res) => {
     const result = await lapanganService.deleteLapangan(req, res);
     return res.status(result.status).json(result);
     };
