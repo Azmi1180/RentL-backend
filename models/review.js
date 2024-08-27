@@ -1,27 +1,75 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
   class Review extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      // define association here
+      // Relasi dengan User
+      Review.belongsTo(models.User, {
+        foreignKey: "user_id",
+        as: "user",
+      });
+
+      // Relasi dengan Lapangan
+      Review.belongsTo(models.Lapangan, {
+        foreignKey: "lapangan_id",
+        as: "lapangan",
+      });
     }
   }
-  Review.init({
-    user_id: DataTypes.INTEGER,
-    lapangan_id: DataTypes.INTEGER,
-    rating: DataTypes.INTEGER,
-    comment: DataTypes.TEXT,
-    created_at: DataTypes.DATE
-  }, {
-    sequelize,
-    modelName: 'Review',
-  });
+
+  Review.init(
+    {
+      user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+          model: "Users",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
+      },
+      lapangan_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+          model: "Lapangans",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
+      },
+      rating: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          min: 1,
+          max: 5,
+        },
+      },
+      comment: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
+      created_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
+      update_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
+    },
+    {
+      sequelize,
+      modelName: "Review",
+      tableName: "Reviews",
+      timestamps: false, 
+    }
+  );
+
   return Review;
 };
