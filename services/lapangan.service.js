@@ -1,5 +1,5 @@
+const { DATE } = require('sequelize');
 const { Lapangan } = require('../models'); // Import the Lapangan model
-const moment = require('moment-timezone');
 
     // GET all Lapangans
 exports.getAllLapangans = async (req, res) => {
@@ -34,7 +34,6 @@ exports.getDetailLapangan = async (req, res) => {
 exports.createLapangan = async (req, res) => {
     const { name, location, type, price_per_hour, description } = req.body;
 
-    const createdAt = moment.tz('Asia/Jakarta').format('YYYY-MM-DD HH:mm:ss');
 
     const data = await Lapangan.create({
         name,
@@ -42,7 +41,8 @@ exports.createLapangan = async (req, res) => {
         type,
         price_per_hour,
         description,
-        created_at: createdAt,
+        created_at: new Date(),
+        updated_at: new Date(),
     });
 
     return {
@@ -67,7 +67,7 @@ exports.editLapangan = async (req, res) => {
     const { name, location, type, price_per_hour, description } = req.body;
 
     await Lapangan.update(
-        { name, location, type, price_per_hour, description },
+        { name, location, type, price_per_hour, description, updated_at: new Date() },
         { where: { id } }
     );
 
