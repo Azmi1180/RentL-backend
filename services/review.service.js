@@ -1,5 +1,5 @@
 const { Review, User, Lapangan } = require('../models'); // Pastikan model User dan Lapangan diimpor
-const moment = require('moment-timezone');
+const { update } = require('../models/User');
 
 // GET all Reviews
 exports.getAllReviews = async (req, res) => {
@@ -34,32 +34,33 @@ exports.getDetailReview = async (req, res) => {
 exports.createReview = async (req, res) => {
     const { user_id, lapangan_id, rating, comment } = req.body;
 
-    // Cek apakah user_id ada di tabel Users
     const user = await User.findOne({ where: { id: user_id } });
-    if (!user) {
+    const lapangan = await Lapangan.findOne({ where: { id: lapangan_id } });
+
+    if (!user && !lapangan) {
+        return {
+            status: 404,
+            message: 'User & Lapangan not found',
+        };
+    } else if (!user) {
         return {
             status: 404,
             message: 'User not found',
         };
-    }
-
-    // Cek apakah lapangan_id ada di tabel Lapangans
-    const lapangan = await Lapangan.findOne({ where: { id: lapangan_id } });
-    if (!lapangan) {
+    } else if (!lapangan) {
         return {
             status: 404,
             message: 'Lapangan not found',
         };
     }
 
-    const createdAt = moment.tz('Asia/Jakarta').format('YYYY-MM-DD HH:mm:ss');
-
     const data = await Review.create({
         user_id,
         lapangan_id,
         rating,
         comment,
-        created_at: createdAt,
+        created_at: new Date(),
+        updated_at: new Date()
     });
 
     return {
@@ -81,32 +82,10 @@ exports.editReview = async (req, res) => {
         };
     }
 
-    const { user_id, lapangan_id, rating, comment } = req.body;
-
-    // Cek apakah user_id ada di tabel Users jika ada perubahan
-    if (user_id) {
-        const user = await User.findOne({ where: { id: user_id } });
-        if (!user) {
-            return {
-                status: 404,
-                message: 'User not found',
-            };
-        }
-    }
-
-    // Cek apakah lapangan_id ada di tabel Lapangans jika ada perubahan
-    if (lapangan_id) {
-        const lapangan = await Lapangan.findOne({ where: { id: lapangan_id } });
-        if (!lapangan) {
-            return {
-                status: 404,
-                message: 'Lapangan not found',
-            };
-        }
-    }
+    const { rating, comment } = req.body;
 
     await Review.update(
-        { rating, comment },
+        { rating, comment, updated_at: new Date() },
         { where: { id } }
     );
 

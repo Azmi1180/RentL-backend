@@ -19,6 +19,7 @@ exports.createReview = async (req, res) => {
 
     if (error) {
         return res.status(400).json({
+            status: 400,
             message: error.details[0].message,
         });
     }
@@ -33,6 +34,7 @@ exports.editReview = async (req, res) => {
 
     if (error) {
         return res.status(400).json({
+            status: 400,
             message: error.details[0].message,
         });
     }
@@ -40,6 +42,7 @@ exports.editReview = async (req, res) => {
     const result = await reviewService.editReview(req, res);
     return res.status(result.status).json(result);
 };
+
 
 // DELETE a Review by ID
 exports.deleteReview = async (req, res) => {
