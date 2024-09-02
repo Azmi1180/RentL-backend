@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     payment_status: DataTypes.STRING,
     payment_date: DataTypes.DATE,
     created_at: DataTypes.DATE,
-    update_at: DataTypes.DATE,
+    updated_at: DataTypes.DATE,
   }, {
     sequelize,
     modelName: 'Checkout',

@@ -38,7 +38,7 @@ User.init({
         allowNull: false,
         defaultValue: DataTypes.NOW,
     },
-    update_at: {
+    updated_at: {
         type: DataTypes.DATE,
         allowNull: false,
         defaultValue: DataTypes.NOW,
