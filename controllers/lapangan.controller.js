@@ -19,7 +19,8 @@ exports.createLapangan = async (req, res) => {
 
     if (error) {
         return res.status(400).json({
-        message: error.details[0].message,
+            status: 400,
+            message: error.details[0].message,
         });
     }
 
@@ -33,7 +34,8 @@ exports.editLapangan = async (req, res) => {
 
     if (error) {
         return res.status(400).json({
-        message: error.details[0].message,
+            status: 400,
+            message: error.details[0].message,
         });
     }
 
