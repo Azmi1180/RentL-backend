@@ -21,7 +21,9 @@ module.exports = (sequelize, DataTypes) => {
     end_time: DataTypes.TIME,
     total_price: DataTypes.FLOAT,
     status: DataTypes.STRING,
-    created_at: DataTypes.DATE
+    created_at: DataTypes.DATE,
+    updated_at: DataTypes.DATE,
+    
   }, {
     sequelize,
     modelName: 'Booking',

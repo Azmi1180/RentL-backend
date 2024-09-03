@@ -18,7 +18,9 @@ module.exports = (sequelize, DataTypes) => {
     payment_method: DataTypes.STRING,
     total_amount: DataTypes.FLOAT,
     payment_status: DataTypes.STRING,
-    payment_date: DataTypes.DATE
+    payment_date: DataTypes.DATE,
+    created_at: DataTypes.DATE,
+    updated_at: DataTypes.DATE,
   }, {
     sequelize,
     modelName: 'Checkout',
