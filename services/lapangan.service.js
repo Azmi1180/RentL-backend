@@ -1,9 +1,56 @@
+const { Op } = require('sequelize'); // Import Sequelize operators
 const { Lapangan } = require('../models'); // Import the Lapangan model
-const moment = require('moment-timezone');
 
-    // GET all Lapangans
-exports.getAllLapangans = async (req, res) => {
-    const data = await Lapangan.findAll();
+// GET all Lapangans with optional filters
+exports.getAllLapangans = async (type, min_price, max_price, name, city) => {
+    let options = {};
+
+    // Jika tidak ada filter atau pencarian, urutkan berdasarkan ID
+    if (!type && !min_price && !max_price && !name && !city) {
+        options.order = [['id', 'ASC']]; // Urutkan berdasarkan ID secara ascending
+    } else {
+        // Jika ada filter, urutkan berdasarkan price_per_hour secara ascending
+        options.order = [['price_per_hour', 'ASC']];
+    }
+
+    // Tambahkan filter berdasarkan type jika tersedia
+    if (type) {
+        options.where = { type };
+    }
+
+    if(city){
+        options.where = { city };
+    }
+
+    // Tambahkan filter untuk rentang harga jika min_price atau max_price disediakan
+    if (min_price || max_price) {
+        options.where = options.where || {};
+        options.where.price_per_hour = {};
+
+        if (min_price) {
+            options.where.price_per_hour[Op.gte] = parseFloat(min_price); // Filter harga minimum
+        }
+
+        if (max_price) {
+            options.where.price_per_hour[Op.lte] = parseFloat(max_price); // Filter harga maksimum
+        }
+    }
+        // Tambahkan filter untuk pencarian nama jika disediakan
+    if (name) {
+        options.where = options.where || {};
+        options.where.name = {
+            [Op.like]: `%${name}%`, // Gunakan operator LIKE untuk pencarian nama
+        };
+    }
+
+    const data = await Lapangan.findAll(options);
+        // Cek apakah data ditemukan
+        if (data.length === 0) {
+            return {
+                status: 404,
+                message: 'Data not found',
+            };
+        }
     return {
         status: 200,
         data,
@@ -32,17 +79,18 @@ exports.getDetailLapangan = async (req, res) => {
 
     // CREATE a new Lapangan
 exports.createLapangan = async (req, res) => {
-    const { name, location, type, price_per_hour, description } = req.body;
+    const { name, city, address, type, price_per_hour, description } = req.body;
 
-    const createdAt = moment.tz('Asia/Jakarta').format('YYYY-MM-DD HH:mm:ss');
 
     const data = await Lapangan.create({
         name,
-        location,
+        city,
+        address,
         type,
         price_per_hour,
         description,
-        created_at: createdAt,
+        created_at: new Date(),
+        updated_at: new Date(),
     });
 
     return {
@@ -64,10 +112,10 @@ exports.editLapangan = async (req, res) => {
         };
     }
 
-    const { name, location, type, price_per_hour, description } = req.body;
+    const { name, city, address, type, price_per_hour, description } = req.body;
 
     await Lapangan.update(
-        { name, location, type, price_per_hour, description },
+        { name, city, address, type, price_per_hour, description, updated_at: new Date() },
         { where: { id } }
     );
 
