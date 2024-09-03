@@ -75,12 +75,13 @@ exports.getDetailLapangan = async (req, res) => {
 
     // CREATE a new Lapangan
 exports.createLapangan = async (req, res) => {
-    const { name, location, type, price_per_hour, description } = req.body;
+    const { name, city, address, type, price_per_hour, description } = req.body;
 
 
     const data = await Lapangan.create({
         name,
-        location,
+        city,
+        address,
         type,
         price_per_hour,
         description,
@@ -107,10 +108,10 @@ exports.editLapangan = async (req, res) => {
         };
     }
 
-    const { name, location, type, price_per_hour, description } = req.body;
+    const { name, city, address, type, price_per_hour, description } = req.body;
 
     await Lapangan.update(
-        { name, location, type, price_per_hour, description, updated_at: new Date() },
+        { name, city, address, type, price_per_hour, description, updated_at: new Date() },
         { where: { id } }
     );
 

@@ -4,7 +4,8 @@ const Joi = require('joi');
 exports.validateAddLapangan = (lapangan) => {
     const schema = Joi.object({
         name: Joi.string().min(3).required(),
-        location: Joi.string().min(3).required(),
+        city: Joi.string().min(3).required(),
+        address: Joi.string().min(3).required(),
         type: Joi.string().min(3).required(),
         price_per_hour: Joi.number().required(),
         description: Joi.string().optional(),
@@ -17,7 +18,8 @@ exports.validateAddLapangan = (lapangan) => {
 exports.validateEditLapangan = (lapangan) => {
     const schema = Joi.object({
         name: Joi.string().min(3).required(),
-        location: Joi.string().min(3).required(),
+        city: Joi.string().min(3).required(),
+        address: Joi.string().min(3).required(),
         type: Joi.string().min(3).required(),
         price_per_hour: Joi.number().required(),
         description: Joi.string().optional(),
