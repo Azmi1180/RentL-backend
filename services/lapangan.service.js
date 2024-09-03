@@ -2,10 +2,16 @@ const { Op } = require('sequelize'); // Import Sequelize operators
 const { Lapangan } = require('../models'); // Import the Lapangan model
 
 // GET all Lapangans with optional filters
-exports.getAllLapangans = async (type, min_price, max_price) => {
-    let options = {
-        order: [['price_per_hour', 'ASC']], // Mengurutkan berdasarkan price_per_hour secara ascending
-    };
+exports.getAllLapangans = async (type, min_price, max_price, name) => {
+    let options = {};
+
+    // Jika tidak ada filter atau pencarian, urutkan berdasarkan ID
+    if (!type && !min_price && !max_price && !name) {
+        options.order = [['id', 'ASC']]; // Urutkan berdasarkan ID secara ascending
+    } else {
+        // Jika ada filter, urutkan berdasarkan price_per_hour secara ascending
+        options.order = [['price_per_hour', 'ASC']];
+    }
 
     // Tambahkan filter berdasarkan type jika tersedia
     if (type) {
@@ -25,8 +31,22 @@ exports.getAllLapangans = async (type, min_price, max_price) => {
             options.where.price_per_hour[Op.lte] = parseFloat(max_price); // Filter harga maksimum
         }
     }
+        // Tambahkan filter untuk pencarian nama jika disediakan
+    if (name) {
+        options.where = options.where || {};
+        options.where.name = {
+            [Op.like]: `%${name}%`, // Gunakan operator LIKE untuk pencarian nama
+        };
+    }
 
     const data = await Lapangan.findAll(options);
+        // Cek apakah data ditemukan
+        if (data.length === 0) {
+            return {
+                status: 404,
+                message: 'Data not found',
+            };
+        }
     return {
         status: 200,
         data,
