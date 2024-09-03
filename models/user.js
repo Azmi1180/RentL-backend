@@ -30,7 +30,7 @@ User.init({
         allowNull: false,
     },
     phone_number: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false,
     },
     created_at: {
