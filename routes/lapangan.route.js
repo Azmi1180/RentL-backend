@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const lapanganController = require('../controllers/lapangan.controller');
 
-// GET all Lapangans
+// GET all Lapangans with optional filters & rentang harga
 router.get('/', lapanganController.getAllLapangans);
 
 // GET a single Lapangan by ID

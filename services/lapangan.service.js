@@ -1,9 +1,32 @@
-const { DATE } = require('sequelize');
+const { Op } = require('sequelize'); // Import Sequelize operators
 const { Lapangan } = require('../models'); // Import the Lapangan model
 
-    // GET all Lapangans
-exports.getAllLapangans = async (req, res) => {
-    const data = await Lapangan.findAll();
+// GET all Lapangans with optional filters
+exports.getAllLapangans = async (type, min_price, max_price) => {
+    let options = {
+        order: [['price_per_hour', 'ASC']], // Mengurutkan berdasarkan price_per_hour secara ascending
+    };
+
+    // Tambahkan filter berdasarkan type jika tersedia
+    if (type) {
+        options.where = { type };
+    }
+
+    // Tambahkan filter untuk rentang harga jika min_price atau max_price disediakan
+    if (min_price || max_price) {
+        options.where = options.where || {};
+        options.where.price_per_hour = {};
+
+        if (min_price) {
+            options.where.price_per_hour[Op.gte] = parseFloat(min_price); // Filter harga minimum
+        }
+
+        if (max_price) {
+            options.where.price_per_hour[Op.lte] = parseFloat(max_price); // Filter harga maksimum
+        }
+    }
+
+    const data = await Lapangan.findAll(options);
     return {
         status: 200,
         data,
