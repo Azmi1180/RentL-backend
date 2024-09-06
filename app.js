@@ -4,6 +4,8 @@ const sequelize = require('./config/database');
 const authRoutes = require('./routes/auth.route');
 const lapanganRoutes = require ('./routes/lapangan.route');
 const reviewRoutes = require ('./routes/review.route');
+const bookingRoutes = require ('./routes/booking.route');
+
 const path = require('path')
 const fileUpload = require('express-fileupload')
 const joi = require('joi')
@@ -23,6 +25,7 @@ dotenv.config();
 app.use('/api/lapangans', lapanganRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/bookings', bookingRoutes);
 
 const PORT = process.env.PORT || 5000;
 

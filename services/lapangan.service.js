@@ -79,7 +79,7 @@ exports.getDetailLapangan = async (req, res) => {
 
     // CREATE a new Lapangan
 exports.createLapangan = async (req, res) => {
-    const { name, city, address, type, price_per_hour, description } = req.body;
+    const { name, city, address, type, price_per_hour, description, open_time, close_time } = req.body;
 
 
     const data = await Lapangan.create({
@@ -89,6 +89,8 @@ exports.createLapangan = async (req, res) => {
         type,
         price_per_hour,
         description,
+        open_time,
+        close_time,
         created_at: new Date(),
         updated_at: new Date(),
     });
@@ -112,10 +114,10 @@ exports.editLapangan = async (req, res) => {
         };
     }
 
-    const { name, city, address, type, price_per_hour, description } = req.body;
+    const { name, city, address, type, price_per_hour, description, open_time, close_time } = req.body;
 
     await Lapangan.update(
-        { name, city, address, type, price_per_hour, description, updated_at: new Date() },
+        { name, city, address, type, price_per_hour, description, open_time,close_time, updated_at: new Date() },
         { where: { id } }
     );
 

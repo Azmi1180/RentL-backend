@@ -1,5 +1,5 @@
 const { Review, User, Lapangan } = require('../models'); // Pastikan model User dan Lapangan diimpor
-const { update } = require('../models/User');
+const { update } = require('../models/user');
 
 // GET all Reviews
 exports.getAllReviews = async (req, res) => {

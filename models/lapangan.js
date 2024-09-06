@@ -33,6 +33,14 @@ module.exports = (sequelize, DataTypes) => {
       description: {
         type: DataTypes.TEXT,
       },
+      open_time: {
+        type: DataTypes.TIME,
+        allowNull: false,
+      },
+      close_time: {
+        type: DataTypes.TIME,
+        allowNull: false,
+      },
       created_at: {
         type: DataTypes.DATE,
         allowNull: false,
