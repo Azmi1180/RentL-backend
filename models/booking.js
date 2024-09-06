@@ -1,32 +1,64 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Booking extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      // define association here
+      // Define associations here if needed
+      Booking.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
+      Booking.belongsTo(models.Lapangan, { foreignKey: 'lapangan_id', as: 'lapangan' });
     }
   }
-  Booking.init({
-    user_id: DataTypes.INTEGER,
-    lapangan_id: DataTypes.INTEGER,
-    booking_date: DataTypes.DATE,
-    start_time: DataTypes.TIME,
-    end_time: DataTypes.TIME,
-    total_price: DataTypes.FLOAT,
-    status: DataTypes.STRING,
-    created_at: DataTypes.DATE,
-    updated_at: DataTypes.DATE,
-    
-  }, {
-    sequelize,
-    modelName: 'Booking',
-  });
+
+  Booking.init(
+    {
+      user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      lapangan_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      booking_date: {
+        type: DataTypes.DATEONLY,
+        allowNull: false,
+      },
+      start_time: {
+        type: DataTypes.TIME,
+        allowNull: false,
+      },
+      end_time: {
+        type: DataTypes.TIME,
+        allowNull: false,
+      },
+      total_price: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+      },
+      status: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'pending',
+      },
+      created_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
+      updated_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
+    },
+    {
+      sequelize,
+      modelName: 'Booking',
+      tableName: 'Bookings',
+      timestamps: false,
+    }
+  );
+
   return Booking;
 };
