@@ -119,6 +119,7 @@ exports.createBooking = async (req, res) => {
         total_price,
         status: 'pending',
         created_at: new Date(),
+        updated_at: new Date(),
     });
 
     return {

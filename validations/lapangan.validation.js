@@ -43,4 +43,29 @@ exports.validateAddLapangan = (lapangan) => {
         });
 
     return schema.validate(lapangan);
+
     };
+
+    // Validation for getting all Lapangans
+    exports.validateGetAllLapangans = (query) => {
+        const schema = Joi.object({
+            type: Joi.string().optional(),
+            min_price: Joi.number().optional(),
+            max_price: Joi.number().optional(),
+            name: Joi.string().optional(),
+            city: Joi.string().optional(),
+            date: Joi.date().iso().optional(),
+            start_time: Joi.string().pattern(/^([0-1]\d|2[0-3]):([0-5]\d)$/).optional()
+                .messages({
+                    'string.pattern.base': 'Format start_time harus HH:MM'
+                }),
+            end_time: Joi.string().pattern(/^([0-1]\d|2[0-3]):([0-5]\d)$/).optional()
+                .messages({
+                    'string.pattern.base': 'Format end_time harus HH:MM'
+                }),
+        });
+
+        return schema.validate(query);
+    };
+
+    

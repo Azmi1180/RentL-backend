@@ -1,62 +1,113 @@
-const { Op } = require('sequelize'); // Import Sequelize operators
-const { Lapangan } = require('../models'); // Import the Lapangan model
+const { Op } = require('sequelize');
+const { Lapangan, Booking } = require('../models');
+const { generateAvailableSlots } = require('../helpers/slot.helpers');
 
-// GET all Lapangans with optional filters
-exports.getAllLapangans = async (type, min_price, max_price, name, city) => {
-    let options = {};
+exports.getAllLapangans = async (type, min_price, max_price, name, city, date, start_time, end_time) => {
+    let options = {
+        where: {},
+        include: []
+    };
 
-    // Jika tidak ada filter atau pencarian, urutkan berdasarkan ID
-    if (!type && !min_price && !max_price && !name && !city) {
-        options.order = [['id', 'ASC']]; // Urutkan berdasarkan ID secara ascending
-    } else {
-        // Jika ada filter, urutkan berdasarkan price_per_hour secara ascending
-        options.order = [['price_per_hour', 'ASC']];
-    }
-
-    // Tambahkan filter berdasarkan type jika tersedia
+    // Filter berdasarkan type
     if (type) {
-        options.where = { type };
+        options.where.type = type;
     }
 
-    if(city){
-        options.where = { city };
+    // Filter berdasarkan city
+    if (city) {
+        options.where.city = city;
     }
 
-    // Tambahkan filter untuk rentang harga jika min_price atau max_price disediakan
+    // Filter berdasarkan rentang harga
     if (min_price || max_price) {
-        options.where = options.where || {};
         options.where.price_per_hour = {};
-
         if (min_price) {
-            options.where.price_per_hour[Op.gte] = parseFloat(min_price); // Filter harga minimum
+            options.where.price_per_hour[Op.gte] = parseFloat(min_price);
         }
-
         if (max_price) {
-            options.where.price_per_hour[Op.lte] = parseFloat(max_price); // Filter harga maksimum
+            options.where.price_per_hour[Op.lte] = parseFloat(max_price);
         }
     }
-        // Tambahkan filter untuk pencarian nama jika disediakan
+
+    // Filter berdasarkan nama
     if (name) {
-        options.where = options.where || {};
         options.where.name = {
-            [Op.like]: `%${name}%`, // Gunakan operator LIKE untuk pencarian nama
+            [Op.like]: `%${name}%`
         };
     }
 
-    const data = await Lapangan.findAll(options);
-        // Cek apakah data ditemukan
-        if (data.length === 0) {
+    // Pengurutan
+    if (!type && !min_price && !max_price && !name && !city && !date && !start_time && !end_time) {
+        options.order = [['id', 'ASC']];
+    } else {
+        options.order = [['price_per_hour', 'ASC']];
+    }
+
+    const lapangans = await Lapangan.findAll(options);
+
+    if (date && start_time && end_time) {
+        const filteredLapangans = [];
+        for (const lapangan of lapangans) {
+            const bookings = await Booking.findAll({
+                where: {
+                    lapangan_id: lapangan.id,
+                    booking_date: date
+                }
+            });
+
+            const availableSlots = generateAvailableSlots(lapangan, bookings);
+            const requestedSlot = {
+                start: start_time,
+                end: end_time
+            };
+
+            const isSlotAvailable = checkAnySlotAvailable(availableSlots, requestedSlot);
+
+            if (isSlotAvailable) {
+                filteredLapangans.push(lapangan);
+            }
+        }
+
+        if (filteredLapangans.length === 0) {
             return {
                 status: 404,
-                message: 'Data not found',
+                message: 'No available fields found for the requested time',
             };
         }
+
+        return {
+            status: 200,
+            data: filteredLapangans,
+            message: 'Success Get Available Lapangan',
+        };
+    }
+
+    if (lapangans.length === 0) {
+        return {
+            status: 404,
+            message: 'Lapangan Not Found',
+        };
+    }
+
     return {
         status: 200,
-        data,
-        message: 'Success Get All Lapangans',
+        data: lapangans,
+        message: 'Success Get All Lapangan',
     };
 };
+
+function checkAnySlotAvailable(availableSlots, requestedSlot) {
+    return availableSlots.some(slot => {
+        const slotStart = new Date(`1970-01-01T${slot.start}`);
+        const slotEnd = new Date(`1970-01-01T${slot.end}`);
+        const requestStart = new Date(`1970-01-01T${requestedSlot.start}`);
+        const requestEnd = new Date(`1970-01-01T${requestedSlot.end}`);
+
+        return (slotStart >= requestStart && slotStart < requestEnd) ||
+               (slotEnd > requestStart && slotEnd <= requestEnd) ||
+               (slotStart <= requestStart && slotEnd >= requestEnd);
+    });
+}
 
     // GET a single Lapangan by ID
 exports.getDetailLapangan = async (req, res) => {
@@ -69,6 +120,7 @@ exports.getDetailLapangan = async (req, res) => {
         message: 'Lapangan Not Found',
         };
     }
+    
 
     return {
         status: 200,

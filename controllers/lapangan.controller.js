@@ -3,8 +3,8 @@ const { validateAddLapangan, validateEditLapangan } = require('../validations/la
 
     // GET all Lapangans
 exports.getAllLapangans = async (req, res) => {
-    const { type, min_price, max_price, name, city } = req.query;
-    const result = await lapanganService.getAllLapangans(type, min_price, max_price, name, city);
+    const { type, min_price, max_price, name, city, date, start_time, end_time } = req.query;
+    const result = await lapanganService.getAllLapangans(type, min_price, max_price, name, city, date, start_time, end_time);
     return res.status(result.status).json(result);
     };
 
