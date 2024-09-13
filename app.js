@@ -5,6 +5,7 @@ const authRoutes = require('./routes/auth.route');
 const lapanganRoutes = require ('./routes/lapangan.route');
 const reviewRoutes = require ('./routes/review.route');
 const bookingRoutes = require ('./routes/booking.route');
+const checkoutRoutes = require ('./routes/checkout.route');
 
 const path = require('path')
 const fileUpload = require('express-fileupload')
@@ -26,6 +27,7 @@ app.use('/api/lapangans', lapanganRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/bookings', bookingRoutes);
+app.use('/api/checkout', checkoutRoutes);
 
 const PORT = process.env.PORT || 5000;
 
