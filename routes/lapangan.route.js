@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const lapanganController = require('../controllers/lapangan.controller');
+const { protect } = require('../middleware/auth.middleware');
 
 // GET all Lapangans with optional filters & rentang harga
 router.get('/', lapanganController.getAllLapangans);
@@ -9,12 +10,12 @@ router.get('/', lapanganController.getAllLapangans);
 router.get('/:id', lapanganController.getDetailLapangan);
 
 // CREATE a new Lapangan
-router.post('/', lapanganController.createLapangan);
+router.post('/', protect, lapanganController.createLapangan);
 
 // UPDATE a Lapangan by ID
-router.put('/:id', lapanganController.editLapangan);
+router.put('/:id', protect, lapanganController.editLapangan);
 
 // DELETE a Lapangan by ID
-router.delete('/:id', lapanganController.deleteLapangan);
+router.delete('/:id', protect, lapanganController.deleteLapangan);
 
 module.exports = router;
