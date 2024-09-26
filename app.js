@@ -7,12 +7,18 @@ const reviewRoutes = require ('./routes/review.route');
 const bookingRoutes = require ('./routes/booking.route');
 const checkoutRoutes = require ('./routes/checkout.route');
 
+
 const path = require('path')
 const fileUpload = require('express-fileupload')
 const joi = require('joi')
 const fs = require('fs')
 let cors = require('cors')
 const app = express();
+
+const bodyParser = require('body-parser');
+
+// Middleware untuk memparsing JSON
+app.use(bodyParser.json()); 
 
 app.use(cors())
 app.use(express.static(path.join(__dirname, 'public')))

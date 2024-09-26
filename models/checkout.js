@@ -13,9 +13,10 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
+  // bang
   Checkout.init({
     booking_id: DataTypes.INTEGER,
-    payment_method: DataTypes.STRING,
+    payment_method: DataTypes.STRING, 
     total_amount: DataTypes.FLOAT,
     payment_status: DataTypes.STRING,
     payment_date: DataTypes.DATE,
@@ -24,6 +25,15 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Checkout',
+    timestamps: false,
+
   });
+
+//   {
+//     sequelize,
+//     modelName: 'User',
+//     tableName: 'Users',
+//     timestamps: false,
+// }
   return Checkout;
 };

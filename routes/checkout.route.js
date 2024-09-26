@@ -20,5 +20,6 @@ const checkoutController = require('../controllers/checkout.controller');
 const { protect } = require('../middleware/auth.middleware');
 
 router.post('/', protect, checkoutController.checkoutProducController); 
+// router.post('/', checkoutController.checkoutProducController); 
 
 module.exports = router; 
