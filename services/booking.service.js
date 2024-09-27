@@ -48,7 +48,9 @@ exports.getAllBookings = async (userId, lapanganId, bookingDate) => {
 
 // CREATE a new Booking
 exports.createBooking = async (req, res) => {
-    const { user_id, lapangan_id, booking_date, start_time, end_time } = req.body;
+    const { lapangan_id, booking_date, start_time, end_time } = req.body;
+
+    const user_id = req.user_data.id
 
     // Fetch lapangan to calculate total price
     const lapangan = await Lapangan.findByPk(lapangan_id);
@@ -119,6 +121,7 @@ exports.createBooking = async (req, res) => {
         total_price,
         status: 'pending',
         created_at: new Date(),
+        updated_at: new Date(),
     });
 
     return {
