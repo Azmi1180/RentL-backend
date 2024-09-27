@@ -23,9 +23,9 @@ exports.register = async (req, res) => {
             updated_at: new Date()
         });
 
-        res.status(201).json({ message: 'User registered successfully', user });
+        res.status(201).json({ status: 201, message: 'User registered successfully', user });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ status: 500, error: error.message });
     }
 };
 
@@ -37,20 +37,20 @@ exports.login = async (req, res) => {
         const user = await User.findOne({ where: { email } });
 
         if (!user) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(404).json({ status: 404, error: 'User not found' });
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
 
         if (!isMatch) {
-            return res.status(401).json({ error: 'Incorrect password' });
+            return res.status(401).json({ status: 401, error: 'Incorrect password' });
         }
 
         const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        res.status(200).json({ message: 'Logged in successfully', token });
+        res.status(200).json({ status: 200, message: 'Logged in successfully', token });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ status: 500, error: error.message });
     }
 };
 
@@ -60,7 +60,7 @@ exports.getAllUsers = async (req, res) => {
         const users = await User.findAll();
         res.status(200).json(users);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ status: 500, error: error.message });
     }
 };
 
@@ -71,12 +71,12 @@ exports.getUserById = async (req, res) => {
         const user = await User.findByPk(id);
         
         if (!user) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(404).json({ status: 404, error: 'User not found' });
         }
         
         res.status(200).json(user);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ status: 500, error: error.message });
     }
 };
 
@@ -89,7 +89,7 @@ exports.updateUser = async (req, res) => {
         const user = await User.findByPk(id);
 
         if (!user) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(404).json({ status: 404, error: 'User not found' });
         }
 
         if (password) {
@@ -105,7 +105,7 @@ exports.updateUser = async (req, res) => {
 
         res.status(200).json({ message: 'User updated successfully', user });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ status: 500, error: error.message });
     }
 };
 
@@ -117,13 +117,13 @@ exports.deleteUser = async (req, res) => {
         const user = await User.findByPk(id);
 
         if (!user) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(404).json({ status: 404, error: 'User not found' });
         }
 
         await user.destroy();
 
         res.status(200).json({ message: 'User deleted successfully' });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ status: 500, error: error.message });
     }
 };
