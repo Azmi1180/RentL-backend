@@ -2,6 +2,16 @@
 Final Project Lab ESD
 
 # Project: rentL
+## Deskripsi:
+Rent L merupakan sebuah platform web booking lapangan olahraga yang meliputi lapangan badminton, lapagan futsal, lapangan sepak bola dan lapangan basket. Dalam perancangannya rent L dirancang untuk menjawab tantangan global di seluruh kalangan yang sering kali kesulitan dalam melakukan pemesanan lapangan online. Rent L menyediakan solusi kepada pengguna untuk melakukan booking atau pemesanan secara digital dan real-time, rent L juga memberikan kelebihan kepada pengguna untuk melihat jadwal ketersediaan dilengkapi dengan deskripsi, gambar lapangan dan harga sewa, memilih jenis lapangan dan sharing ulasan terhadap sesama pengguna.
+
+## Fitur-fitur:
+* Login & Register (Authentication)
+* Detail Lapangan
+* Booking Online
+* Review & Comment
+* Easy Payment with Midtrans Gateway
+>
 # 📁 Collection: Lapangan 
 
 
