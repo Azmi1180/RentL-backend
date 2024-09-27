@@ -1,5 +1,7 @@
 const { Op } = require('sequelize'); // Import Sequelize operators
 const { Lapangan } = require('../models'); // Import the Lapangan model
+const { saveImage } = require('../helpers/saveImage.helper')
+const { deleteImageHelper } = require('../helpers/deleteImage.helper');
 
 // GET all Lapangans with optional filters
 exports.getAllLapangans = async (type, min_price, max_price, name, city) => {
@@ -79,7 +81,11 @@ exports.getDetailLapangan = async (req, res) => {
 
     // CREATE a new Lapangan
 exports.createLapangan = async (req, res) => {
-    const { name, city, address, type, price_per_hour, description, open_time, close_time } = req.body;
+    const { name, city, address, type, price_per_hour, description, open_time, close_time, image } = req.body;
+    const slug = name.toLowerCase().split(' ').join('-')
+
+    const imageFilePath = await saveImage(req.files.image,slug, "lapangan")
+
 
 
     const data = await Lapangan.create({
@@ -91,6 +97,7 @@ exports.createLapangan = async (req, res) => {
         description,
         open_time,
         close_time,
+        image: imageFilePath,
         created_at: new Date(),
         updated_at: new Date(),
     });
@@ -115,9 +122,15 @@ exports.editLapangan = async (req, res) => {
     }
 
     const { name, city, address, type, price_per_hour, description, open_time, close_time } = req.body;
+    const slug = name.toLowerCase().split(' ').join('-')
+
+    deleteImageHelper(data.image)
+
+    const imageFilePath = await saveImage(req.files.image,slug, "lapangan")
+
 
     await Lapangan.update(
-        { name, city, address, type, price_per_hour, description, open_time,close_time, updated_at: new Date() },
+        { name, city, address, type, price_per_hour, description, open_time,close_time, image: imageFilePath, updated_at: new Date() },
         { where: { id } }
     );
 
@@ -140,6 +153,7 @@ exports.deleteLapangan = async (req, res) => {
     }
 
     await Lapangan.destroy({ where: { id } });
+    deleteImageHelper(data.image)
 
     return {
         status: 200,
