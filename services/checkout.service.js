@@ -1,5 +1,5 @@
 const { rupiahFormat } = require('../helpers/rupiahFormat.helper');
-const { Checkout, Lapangan, User } = require('../models');
+const { Checkout, Booking, Lapangan } = require('../models'); // Pastikan Lapangan diimpor
 const midtransClient = require('midtrans-client');
 
 // Create Core API instance
@@ -11,9 +11,7 @@ let coreApi = new midtransClient.CoreApi({
 
 exports.createCheckoutProduct = async (req) => {
     try {
-        const { id_lapangan, duration, bank } = req.body;
-
-
+        const { booking_id, bank } = req.body;
 
         // Check user authentication
         const id_user = req.user_data ? req.user_data.id : null;
@@ -24,17 +22,23 @@ exports.createCheckoutProduct = async (req) => {
             };
         }
 
-        // Fetch lapangan data
-        const lapangan = await Lapangan.findOne({ where: { id: id_lapangan } });
-        if (!lapangan) {
+        // Fetch booking data with associated Lapangan
+        const booking = await Booking.findOne({
+            where: { id: booking_id },
+            include: [{
+                model: Lapangan, // Pastikan model Lapangan diimpor
+                as: 'lapangan' // Pastikan alias sesuai dengan yang didefinisikan di model
+            }]
+        });
+        if (!booking) {
             return {
                 status: 404,
-                message: "Lapangan yang ingin kamu booking tidak ditemukan"
+                message: "Booking not found"
             };
         }
 
         // Calculate total price
-        const totalPrice = duration * lapangan.price_per_hour;
+        const totalPrice = booking.total_price;
 
         // Generate a random order ID (use uuid instead for production)
         const randomOrderId = `order-${Math.floor(Math.random() * 1000)}`;
@@ -47,10 +51,10 @@ exports.createCheckoutProduct = async (req) => {
                 "gross_amount": totalPrice
             },
             "items_details": [{
-                "id": lapangan.id,
-                "price": lapangan.price_per_hour,
-                "quantity": duration,
-                "name": lapangan.name
+                "id": booking.lapangan_id,
+                "price": booking.total_price,
+                "quantity": 1,
+                "name": `Booking for ${booking.lapangan.name}`
             }],
             "bank_transfer": {
                 "bank": bank
@@ -71,19 +75,30 @@ exports.createCheckoutProduct = async (req) => {
             throw new Error("Failed to retrieve VA number from Midtrans.");
         }
 
-        console.log(Checkout);
-
         // Save transaction in the database
         let data = await Checkout.create({
             order_id: randomOrderId,
             id_user,
-            id_lapangan,
-            duration,
+            booking_id,
             total_amount: totalPrice,
             payment_status: "pending",
             payment_method: "bank_transfer",
-            va_number: vaNumber
+            va_number: vaNumber,
+            payment_date: new Date(), // Menambahkan payment_date dengan nilai saat ini
+            created_at: new Date(),
+            updated_at: new Date(),
         });
+
+        // Cek status pembayaran menggunakan order_id
+        const paymentStatus = await coreApi.transaction.status(randomOrderId);
+        if (paymentStatus.transaction_status === 'settlement') {
+            await Checkout.update({ payment_status: 'success' }, { where: { order_id: randomOrderId } });
+
+            // Update booking status to completed
+            await Booking.update({ status: 'completed' }, { where: { id: booking_id } });
+        } else {
+            console.log("Payment not successful:", paymentStatus.transaction_status); 
+        }
 
         // Format total price in rupiah
         data.dataValues.total = rupiahFormat(totalPrice);
