@@ -266,8 +266,7 @@ Rent L merupakan sebuah platform web booking lapangan olahraga yang meliputi lap
 
 |Param|value|Type|
 |---|---|---|
-|id_lapangan|1|text|
-|duration|2|text|
+|booking_id|1|text|
 |bank|bca|text|
 
 
