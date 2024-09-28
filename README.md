@@ -2,6 +2,16 @@
 Final Project Lab ESD
 
 # Project: rentL
+## Deskripsi:
+Rent L merupakan sebuah platform web booking lapangan olahraga yang meliputi lapangan badminton, lapagan futsal, lapangan sepak bola dan lapangan basket. Dalam perancangannya rent L dirancang untuk menjawab tantangan global di seluruh kalangan yang sering kali kesulitan dalam melakukan pemesanan lapangan online. Rent L menyediakan solusi kepada pengguna untuk melakukan booking atau pemesanan secara digital dan real-time, rent L juga memberikan kelebihan kepada pengguna untuk melihat jadwal ketersediaan dilengkapi dengan deskripsi, gambar lapangan dan harga sewa, memilih jenis lapangan dan sharing ulasan terhadap sesama pengguna.
+
+## Fitur-fitur:
+* Login & Register (Authentication)
+* Detail Lapangan
+* Booking Online
+* Review & Comment
+* Easy Payment with Midtrans Gateway
+>
 # 📁 Collection: Lapangan 
 
 
@@ -32,14 +42,14 @@ Final Project Lab ESD
 ## End-point: Get By Price
 ### Method: GET
 >```
->http://localhost:5000/api/lapangans?min_price&max_price
+>http://localhost:5000/api/lapangans?min_price=20000&max_price=50000
 >```
 ### Query Params
 
 |Param|value|
 |---|---|
-|min_price|null|
-|max_price|null|
+|min_price|20000|
+|max_price|50000|
 
 
 
@@ -73,21 +83,19 @@ Final Project Lab ESD
 >```
 >http://localhost:5000/api/lapangans
 >```
-### Body (**raw**)
+### Body formdata
 
-```json
-{
-  "name": "Lapangan Basket",
-  "city": "Jakarta",
-  "address": "Jl. Sudirman No. 45",
-  "type": "Basketball",
-  "price_per_hour": 10000.0,
-  "description": "High-quality grass field.",
-  "open_time": "08:00",
-  "close_time": "20:00"  
-}
-
-```
+|Param|value|Type|
+|---|---|---|
+|name|Lapangan Basket|text|
+|city|Jakarta|text|
+|address|Jl. Sudirman No. 45|text|
+|type|Basketball|text|
+|price_per_hour|10000|text|
+|description|High-quality grass field.|text|
+|open_time|08:00|text|
+|close_time|20:00|text|
+|image|file.jpg|file|
 
 
 ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃
@@ -97,19 +105,20 @@ Final Project Lab ESD
 >```
 >http://localhost:5000/api/lapangans/8
 >```
-### Body (**raw**)
+### Body formdata
 
-```json
-{
-  "name": "Lapangan Basket",
-  "city": "Jakarta",
-  "address": "Jl. Sudirman No. 45",
-  "type": "Basketball",
-  "price_per_hour": 40000.0,
-  "description": "High-quality grass field."
-}
+|Param|value|Type|
+|---|---|---|
+|name|Lapangan Basket|text|
+|city|Jakarta|text|
+|address|Jl. Sudirman No. 45|text|
+|type|Basketball|text|
+|price_per_hour|10000|text|
+|description|High-quality grass field.|text|
+|open_time|08:00|text|
+|close_time|20:00|text|
+|image|file.jpg|file|
 
-```
 
 
 ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃
@@ -193,6 +202,19 @@ Final Project Lab ESD
 >```
 >http://localhost:5000/api/bookings/
 >```
+
+⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃
+
+## End-point: Get Bookings by User
+### Method: GET
+>```
+>http://localhost:5000/api/bookings/?userId=2
+>```
+>### Query Params
+
+|Param|value|
+|---|---|
+|userId|2|
 
 ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃
 
