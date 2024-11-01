@@ -1,12 +1,13 @@
 const { rupiahFormat } = require('../helpers/rupiahFormat.helper');
 const { Checkout, Booking, Lapangan } = require('../models'); // Pastikan Lapangan diimpor
 const midtransClient = require('midtrans-client');
+require('dotenv').config();
 
 // Create Core API instance
 let coreApi = new midtransClient.CoreApi({
     isProduction: false,
-    serverKey: 'SB-Mid-server-J9QnrxjOBZmP0dxlAtNxrnnP',
-    clientKey: 'SB-Mid-client-mz83itkeVpAdDtom'
+    serverKey: process.env.MIDTRANS_SERVER_KEY,
+    clientKey: process.env.MIDTRANS_CLIENT_KEY,
 });
 
 exports.createCheckoutProduct = async (req) => {
